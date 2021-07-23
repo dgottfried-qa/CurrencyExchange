@@ -23,8 +23,19 @@ class CurrencyConverter(unittest.TestCase):
         self.assertEqual(actual, expected.rgb, 'Better is not green')
 
     # Test values above 0 are data type better
+    def test_positive_values_are_better(self):
+        positive_values = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='better']/span")
+        all_positive = True
+        for i in (positive_values):
+            value = i.get_attribute('textContent').replace('%','')
+            if float(value) < 0:
+               all_positive = False
+        self.assertTrue(all_positive)
+
+
+
     # Test values below 0 are data typer worse
-    
+
     @classmethod
     def tearDownClass(self):
         driver.close()
