@@ -32,9 +32,15 @@ class CurrencyConverter(unittest.TestCase):
                all_positive = False
         self.assertTrue(all_positive)
 
-
-
     # Test values below 0 are data typer worse
+    def test_negative_values_are_worse(self):
+        negative_values = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
+        all_negative = True
+        for i in (negative_values):
+            value = i.get_attribute('textContent').replace('%','')
+            if float(value) > 0:
+                all_negative = False
+        self.assertTrue(all_negative)
 
     @classmethod
     def tearDownClass(self):
