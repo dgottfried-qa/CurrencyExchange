@@ -10,8 +10,8 @@ class CurrencyConverter(unittest.TestCase):
 
     # Test data type worse is red
     def test_worse_should_be_red(self):
-        worseElements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
-        actual = worseElements[0].value_of_css_property("background-color")
+        worse_elements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
+        actual = worse_elements[0].value_of_css_property("background-color")
         expected = Color.from_string('rgb(255, 225, 225)')
         self.assertEqual(actual, expected.rgb, 'Worse is not red')
 
@@ -23,26 +23,34 @@ class CurrencyConverter(unittest.TestCase):
         self.assertEqual(actual, expected.rgb, 'Better is not green')
 
     # Test values above 0 are data type better
-    def test_positive_values_are_better(self):
-        positive_values = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='better']/span")
+    def test_better_elements_are_better(self):
+        better_elements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='better']/span")
         all_positive = True
-        for i in (positive_values):
+        for i in (better_elements):
             value = i.get_attribute('textContent').replace('%','')
             if float(value) < 0:
                all_positive = False
         self.assertTrue(all_positive)
 
     # Test values below 0 are data type worse
-    def test_negative_values_are_worse(self):
-        negative_values = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
+    def test_worse_elements_are_worse(self):
+        worse_elements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
         all_negative = True
-        for i in (negative_values):
+        for i in (worse_elements):
             value = i.get_attribute('textContent').replace('%','')
             if float(value) > 0:
                 all_negative = False
         self.assertTrue(all_negative)
 
     # Test that all item in Change and Net Change are better or worse
+    def test_change_columns_are_better_or_worse(self):
+        worse_elements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='worse']/span")
+        better_elements = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[@data-type='better']/span")
+        net_change_col = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[2]/span")
+        change_col = driver.find_elements_by_xpath("//table[@class='data-table']/tbody/tr/td[3]/span")
+        expected = len(worse_elements) + len(better_elements)
+        actual = len(net_change_col) + len(change_col)
+        self.assertEqual(actual, expected, 'the number of better and worse is not equal to the total in the columns')
 
     @classmethod
     def tearDownClass(self):
